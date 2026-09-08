@@ -1,11 +1,10 @@
 import ConsoleUI.AuthMenu;
 import ConsoleUI.MainMenu;
+import Models.User;
 
 
 void main() {
 
-   MainMenu mainMenu = new MainMenu();
-   mainMenu.menu();
     // get the auth menu
    AuthMenu menu = new AuthMenu() ;
    menu.showMenu() ;
