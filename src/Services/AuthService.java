@@ -38,7 +38,7 @@ public class AuthService {
         validator.validatePassword(password);
 
         Optional<User> optionalUser = userRepo.findByEmail(email);
-
+        ;
         if (optionalUser.isEmpty()) {
             throw new IllegalArgumentException("this email does not exist");
         }
