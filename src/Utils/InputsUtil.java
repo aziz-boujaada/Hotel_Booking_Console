@@ -6,7 +6,13 @@ import Services.AuthService;
 import java.util.Scanner;
 
 public class InputsUtil {
+
+    private final  AuthService authService;
+    public  InputsUtil(){
+        this.authService = new AuthService();
+    }
     // Register form
+
     public void registerForm() {
 
         Scanner scanner = new Scanner(System.in);
@@ -26,8 +32,8 @@ public class InputsUtil {
         String password = scanner.nextLine();
 
         // call auth service to pass the register information
-        AuthService auth = new AuthService();
-        User user = auth.register(fullname, email, phone, password);
+
+        User user = authService.register(fullname, email, phone, password);
 
 
         System.out.println("\n===== User Registered =====");
@@ -38,35 +44,6 @@ public class InputsUtil {
     }
 
 
-    // update form
-//    public void updateUserForm() {
-
-//        Scanner scanner = new Scanner(System.in);
-//
-//        System.out.println("======= Update Profile  ======");
-//
-//        System.out.println("Enter Your full name : ");
-//        String fullname = scanner.nextLine();
-//
-//        System.out.println("Enter Your email : ");
-//        String email = scanner.nextLine();
-//
-//        System.out.println("Enter Your phone : ");
-//        String phone = scanner.nextLine();
-//
-//        System.out.println("Enter Your password : ");
-//        String password = scanner.nextLine();
-
-        // call auth service to pass the register information
-//        AuthService auth = new AuthService();
-//        User user = auth.register(fullname, email, phone, password);
-//        auth.updateProfile(user);
-//
-//
-//        System.out.println("\n===== User Registered =====");
-//        System.out.println(user.toString());
-//
-//    }
 
     // Login form
     public void loginForm() {
@@ -83,7 +60,7 @@ public class InputsUtil {
 
         // call auth service to pass the login cerdinalities
         AuthService auth = new AuthService();
-        User user = auth.login(email, password);
+        User user = authService.login(email, password);
 
 
         System.out.println("\n===== Login successfully =====");
