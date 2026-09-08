@@ -1,5 +1,6 @@
 package Utils;
 
+import ConsoleUI.MainMenu;
 import Models.User;
 import Services.AuthService;
 
@@ -62,6 +63,8 @@ public class InputsUtil {
 
         User user = authService.login(email, password);
 
+        MainMenu mainMenu = new MainMenu(user);
+        mainMenu.menu();
 
         System.out.println("\n===== Login successfully =====");
         System.out.println(user.toString());
