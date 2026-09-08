@@ -59,7 +59,7 @@ public class InputsUtil {
         String password = scanner.nextLine();
 
         // call auth service to pass the login cerdinalities
-        AuthService auth = new AuthService();
+
         User user = authService.login(email, password);
 
 
