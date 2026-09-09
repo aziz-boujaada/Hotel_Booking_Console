@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InMemoryRoomRepo implements RoomRepository {
 
-    HashMap<String , Room> rooms = new HashMap<>();
+    private static final HashMap<String, Room> rooms = new HashMap<>();
 
     @Override
     public Room addNewRoom(Room room) {
@@ -24,9 +24,7 @@ public class InMemoryRoomRepo implements RoomRepository {
     public List<Room> showAllRooms(){
         List<Room> roomList = new ArrayList<>();
 
-        for (Room room : rooms.values()) {
-            roomList.add(room);
-        }
+        roomList.addAll(rooms.values());
 
         return roomList;
 
