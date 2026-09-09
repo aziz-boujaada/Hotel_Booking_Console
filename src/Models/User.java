@@ -1,5 +1,7 @@
 package Models;
 
+import Enums.UserRole;
+
 import java.util.UUID;
 
 public class User {
@@ -10,17 +12,20 @@ public class User {
     private String phone;
     private Boolean isLogged;
     private String password;
+    private UserRole role ;
 
     private static  int counter = 0 ;
 
-    public User(String id , String fullName , String email , String phone , Boolean isLogged,String password){
+    public User(String id , String fullName , String email , String phone , Boolean isLogged,String password,UserRole role){
         this.id = generateID();
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.isLogged = isLogged;
         this.password = password;
+        this.role = role;
     }
+
 
     public String generateID(){
          UUID id = UUID.randomUUID();
@@ -82,6 +87,15 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     @Override
     public String toString(){
         return "User{" +
@@ -89,6 +103,7 @@ public class User {
                 ", fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

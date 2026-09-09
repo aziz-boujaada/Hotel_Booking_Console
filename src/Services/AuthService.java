@@ -1,5 +1,6 @@
 package Services;
 
+import Enums.UserRole;
 import Models.User;
 
 import Repositories.impl.InMemoryUserRepo;
@@ -20,13 +21,13 @@ public class AuthService {
     }
 
     // REGISTER
-    public User register(String fullName, String email, String phone, String password) {
+    public User register(String fullName, String email, String phone, String password , UserRole role) {
 
         validator.validateNames(fullName);
         validator.validateEmail(email);
         validator.validatePassword(password);
 
-        User user = new User(null, fullName, email, phone, false, password);
+        User user = new User(null, fullName, email, phone, false, password , role) ;
 
         return userRepo.save(user);
     }
@@ -38,7 +39,7 @@ public class AuthService {
         validator.validatePassword(password);
 
         Optional<User> optionalUser = userRepo.findByEmail(email);
-        ;
+
         if (optionalUser.isEmpty()) {
             throw new IllegalArgumentException("this email does not exist");
         }
