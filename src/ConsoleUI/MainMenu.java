@@ -13,8 +13,12 @@ public class MainMenu {
     private  final User loggedUser ;
 
      public MainMenu(User loggedUser){
-         this.authService = new AuthService() ;
-         this.loggedUser = loggedUser ;
+         this(loggedUser, new AuthService());
+     }
+
+     public MainMenu(User loggedUser, AuthService authService){
+         this.authService = authService;
+         this.loggedUser = loggedUser;
      }
      
     public  void menu() {
@@ -71,11 +75,31 @@ public class MainMenu {
                     break;
 
                 case 8:
-                    System.out.println("updateProfile coming soon");
+                    scanner.nextLine();
+
+                    System.out.println("======= Update Profile ======");
+                    System.out.print("Enter your full name: ");
+                    String fullName = scanner.nextLine();
+
+                    System.out.print("Enter your email: ");
+                    String email = scanner.nextLine();
+
+                    System.out.print("Enter your phone: ");
+                    String phone = scanner.nextLine();
+
+                    User updatedUser = authService.updateProfile(loggedUser, fullName, email, phone);
+                    System.out.println("Profile updated successfully");
+                    System.out.println(updatedUser);
                     break;
 
                 case 9:
-                    System.out.println("changePassword coming soon");
+
+                    System.out.print("Enter new password: ");
+                    String newPassword = scanner.next();
+
+                    authService.changePassword(loggedUser, newPassword);
+
+                    System.out.println("Password updated successfully!");
                     break;
 
                 case 10:

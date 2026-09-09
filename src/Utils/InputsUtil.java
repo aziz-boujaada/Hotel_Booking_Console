@@ -63,7 +63,7 @@ public class InputsUtil {
 
         User user = authService.login(email, password);
 
-        MainMenu mainMenu = new MainMenu(user);
+        MainMenu mainMenu = new MainMenu(user, authService);
         mainMenu.menu();
 
         System.out.println("\n===== Login successfully =====");

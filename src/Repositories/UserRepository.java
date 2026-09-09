@@ -13,4 +13,5 @@ public interface UserRepository {
     boolean existsByEmail(String email);
     List<User> findAll();
     User update(User user);
+    void updatePassword(User user , String password);
 }

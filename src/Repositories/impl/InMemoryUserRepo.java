@@ -3,7 +3,6 @@ package Repositories.impl;
 import Models.User;
 import Repositories.UserRepository;
 
-import java.sql.Array;
 import java.util.*;
 
 public class InMemoryUserRepo implements UserRepository {
@@ -12,9 +11,7 @@ public class InMemoryUserRepo implements UserRepository {
 
     @Override
     public User save(User user){
-
-        String id = user.generateID();
-        users.put(id , user);
+        users.put(user.getId(), user);
 
         return  user;
     }
@@ -41,7 +38,7 @@ public class InMemoryUserRepo implements UserRepository {
 
     @Override
     public boolean existsByEmail(String email){
-        return users.containsKey(email);
+        return findByEmail(email).isPresent();
     }
 
     @Override
@@ -51,8 +48,13 @@ public class InMemoryUserRepo implements UserRepository {
 
     @Override
         public User update(User user){
-            String id = user.generateID();
-           return users.put(id , user);
+            users.put(user.getId(), user);
+            return user;
+        }
+
+        @Override
+       public void updatePassword(User user , String password){
+            user.setPassword(password);
         }
 
 }

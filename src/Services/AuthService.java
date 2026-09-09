@@ -62,11 +62,33 @@ public class AuthService {
             user.setLogged(false);
         }
     }
-}
+
+    public void changePassword(User user , String password){
+
+        validator.validatePassword(password);
+        userRepo.updatePassword(user , password);
+
+    }
 
     // UPDATE PROFILE
+    public User updateProfile(User user, String fullName, String email, String phone) {
+        if (user == null) {
+            throw new IllegalArgumentException("User is required");
+        }
 
-//    public User updateProfile(User user){
-//        userRepo.update(user);
-//        return user;
-//    }
+        validator.validateNames(fullName);
+        validator.validateEmail(email);
+        validator.validateEmpty(phone);
+
+        Optional<User> userWithEmail = userRepo.findByEmail(email);
+        if (userWithEmail.isPresent() && !userWithEmail.get().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("This email is already in use");
+        }
+
+        user.setFullName(fullName);
+        user.setEmail(email);
+        user.setPhone(phone);
+
+        return userRepo.update(user);
+    }
+}
