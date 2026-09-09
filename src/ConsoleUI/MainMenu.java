@@ -1,8 +1,14 @@
 package ConsoleUI;
 
+import Enums.UserRole;
+import Midllewares.AdminMiddleware;
+import Models.Room;
 import Models.User;
+import Repositories.impl.InMemoryRoomRepo;
 import Services.AuthService;
+import Utils.InputsUtil;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
@@ -12,13 +18,22 @@ public class MainMenu {
 
     private  final User loggedUser ;
 
+    private final InputsUtil inputsUtil ;
+
+    private final AdminMiddleware adminMiddleware;
+
+    private final InMemoryRoomRepo roomRepo;
+
      public MainMenu(User loggedUser){
          this(loggedUser, new AuthService());
      }
 
-     public MainMenu(User loggedUser, AuthService authService){
+     public MainMenu(User loggedUser, AuthService authService ){
          this.authService = authService;
          this.loggedUser = loggedUser;
+         this.inputsUtil = new InputsUtil();
+         this.adminMiddleware = new AdminMiddleware();
+         this.roomRepo = new InMemoryRoomRepo();
      }
      
     public  void menu() {
@@ -38,7 +53,8 @@ public class MainMenu {
             System.out.println("7. Cancel Reservation");
             System.out.println("8. Update Profile");
             System.out.println("9. Change Password");
-            System.out.println("10. Logout");
+            System.out.println("10. Rooms Management");
+            System.out.println("11. Logout");
             System.out.println("===================================");
             System.out.print("Enter Your Choice : ");
 
@@ -51,7 +67,17 @@ public class MainMenu {
                     break;
 
                 case 2:
-                    System.out.println("view Rooms coming soon");
+                    List<Room> rooms = roomRepo.showAllRooms();
+
+                    if (rooms.isEmpty()) {
+                        System.out.println("No rooms found.");
+                        break;
+                    }
+
+                    for (Room room : rooms) {
+                        System.out.println(room);
+                    }
+
                     break;
 
                 case 3:
@@ -75,34 +101,20 @@ public class MainMenu {
                     break;
 
                 case 8:
-                    scanner.nextLine();
-
-                    System.out.println("======= Update Profile ======");
-                    System.out.print("Enter your full name: ");
-                    String fullName = scanner.nextLine();
-
-                    System.out.print("Enter your email: ");
-                    String email = scanner.nextLine();
-
-                    System.out.print("Enter your phone: ");
-                    String phone = scanner.nextLine();
-
-                    User updatedUser = authService.updateProfile(loggedUser, fullName, email, phone);
-                    System.out.println("Profile updated successfully");
-                    System.out.println(updatedUser);
+                    inputsUtil.updateProfileForm(loggedUser);
                     break;
 
                 case 9:
-
-                    System.out.print("Enter new password: ");
-                    String newPassword = scanner.next();
-
-                    authService.changePassword(loggedUser, newPassword);
-
-                    System.out.println("Password updated successfully!");
+                     inputsUtil.changePasswordForm(loggedUser);
                     break;
-
                 case 10:
+
+                    if(adminMiddleware.isAdmin(loggedUser)){
+                        RoomManagmentMenu roomManagmentMenu = new RoomManagmentMenu();
+                        roomManagmentMenu.roomMenu();
+                    }
+                    break;
+                case 11:
                     authService.logout(loggedUser);
                     System.out.println("Goodbye!");
                     break;
@@ -111,7 +123,7 @@ public class MainMenu {
                     System.out.println("Invalid choice. Please choose between 1 and 10.");
             }
 
-        } while (userChoice != 10);
+        } while (userChoice != 11);
 
         scanner.close();
     }

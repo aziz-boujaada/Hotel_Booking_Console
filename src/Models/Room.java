@@ -3,28 +3,39 @@ package Models;
 import Enums.RoomStatus;
 import Enums.RoomType;
 
+import java.util.UUID;
+
 public class Room {
 
-    private  int roomNumber ;
+    private  String identify ;
     private RoomType roomType;
     private double nightPrice ;
     private int capacity;
     private RoomStatus roomStatus;
 
-    public Room(int roomNumber, RoomType roomType, double nightPrice, int capacity, RoomStatus roomStatus) {
-        this.roomNumber = roomNumber;
+
+    public static int counter = 0 ;
+
+    public Room(String identify, RoomType roomType, double nightPrice, int capacity, RoomStatus roomStatus) {
+        this.identify = generateRoomID();
         this.roomType = roomType;
         this.nightPrice = nightPrice;
         this.capacity = capacity;
         this.roomStatus = roomStatus;
     }
 
-    public int getRoomNumber() {
-        return roomNumber;
+
+    // generate unique identify to room
+    public String generateRoomID(){
+        UUID identify = UUID.randomUUID();
+        return "ROOM-" + identify.toString().substring(0 , 4) + "-" + String.format("%04d" , counter++);
+    }
+    public String getRoomNumber() {
+        return identify;
     }
 
-    public void setRoomNumber(int roomNumber) {
-        this.roomNumber = roomNumber;
+    public void setRoomNumber(String identify) {
+        this.identify = Room.this.identify;
     }
 
     public RoomType getRoomType() {
@@ -57,5 +68,16 @@ public class Room {
 
     public void setRoomStatus(RoomStatus roomStatus) {
         this.roomStatus = roomStatus;
+    }
+
+    @Override
+    public String toString(){
+        return "Room{" +
+                "identify='" + identify + '\'' +
+                ", type='" + roomType + '\'' +
+                ", Night Price ='" + nightPrice + '\'' +
+                ", Capacity='" + capacity + '\'' +
+                ", Status='" + roomStatus + '\'' +
+                '}';
     }
 }

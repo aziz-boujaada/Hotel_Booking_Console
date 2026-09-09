@@ -4,16 +4,22 @@ import ConsoleUI.MainMenu;
 import Enums.RoomStatus;
 import Enums.RoomType;
 import Enums.UserRole;
+import Models.Room;
 import Models.User;
 import Services.AuthService;
+import Services.RoomService;
 
 import java.util.Scanner;
 
 public class InputsUtil {
 
     private final  AuthService authService;
-    public  InputsUtil(){
+    private final RoomService roomService;
+
+    Scanner scanner = new Scanner(System.in);
+    public InputsUtil(){
         this.authService = new AuthService();
+        this.roomService = new RoomService();
     }
     // Register form
 
@@ -82,14 +88,41 @@ public class InputsUtil {
         // call auth service to pass the login cerdinalities
 
         User user = authService.login(email, password);
+        System.out.println("\n===== Login successfully =====");
+        System.out.println(user.toString());
 
         MainMenu mainMenu = new MainMenu(user, authService);
         mainMenu.menu();
 
-        System.out.println("\n===== Login successfully =====");
-        System.out.println(user.toString());
     }
 
+    // change password menu
+    public void changePasswordForm(User loggedUser){
+        System.out.print("Enter new password: ");
+        String newPassword = scanner.next();
+
+        authService.changePassword(loggedUser, newPassword);
+
+        System.out.println("Password updated successfully!");
+    }
+
+    public void updateProfileForm(User loggedUser){
+
+
+        System.out.println("======= Update Profile ======");
+        System.out.print("Enter your full name: ");
+        String fullName = scanner.nextLine();
+
+        System.out.print("Enter your email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Enter your phone: ");
+        String phone = scanner.nextLine();
+
+        User updatedUser = authService.updateProfile(loggedUser, fullName, email, phone);
+        System.out.println("Profile updated successfully");
+        System.out.println(updatedUser);
+    }
     // Add New Room Form
 
     public void addRoomForm(){
@@ -121,8 +154,8 @@ public class InputsUtil {
         System.out.println("Enter capacity of room : ");
         int capacity = scanner.nextInt();
 
-        System.out.println("Enter Your phone : ");
-        double nightPrice = scanner.nextInt();
+        System.out.println("Enter night price : ");
+        double nightPrice = scanner.nextDouble();
 
         System.out.println("---- choice Room Status  ----");
         System.out.println("1- Available");
@@ -140,8 +173,10 @@ public class InputsUtil {
                 throw new IllegalArgumentException("invalid  room status ");
         }
 
-
-
+      // call the room service to pass room infos
+        Room room = roomService.addRoom(roomType , nightPrice , capacity , roomStatus );
+        System.out.println("Room created Successfully");
+        System.out.println(room.toString());
 
     }
 }

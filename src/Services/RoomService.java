@@ -1,4 +1,29 @@
 package Services;
 
+import Enums.RoomStatus;
+import Enums.RoomType;
+import Models.Room;
+import Repositories.impl.InMemoryRoomRepo;
+import Utils.MoneyUtil;
+
+
 public class RoomService {
+
+    private final MoneyUtil moneyUtil ;
+    private final InMemoryRoomRepo roomRepo ;
+
+    public RoomService(){
+        this.moneyUtil = new MoneyUtil();
+        this.roomRepo = new InMemoryRoomRepo();
+    }
+
+    public Room addRoom(RoomType roomType , double nightPrice , int capacity , RoomStatus roomStatus){
+
+        String parsedPrice = Double.toString(nightPrice);
+        moneyUtil.validateEmpty(parsedPrice);
+        moneyUtil.validatePrices(parsedPrice);
+
+        Room room = new Room(null , roomType , nightPrice , capacity , roomStatus);
+        return roomRepo.addNewRoom(room);
+    }
 }
