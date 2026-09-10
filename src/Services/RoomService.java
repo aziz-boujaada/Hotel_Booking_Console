@@ -6,6 +6,8 @@ import Models.Room;
 import Repositories.impl.InMemoryRoomRepo;
 import Utils.MoneyUtil;
 
+import java.util.List;
+
 
 public class RoomService {
 
@@ -25,5 +27,14 @@ public class RoomService {
 
         Room room = new Room(null , roomType , nightPrice , capacity , roomStatus);
         return roomRepo.addNewRoom(room);
+    }
+
+    public List<Room> getAvailableRooms(){
+
+        List<Room> availableRooms = roomRepo.showAllRooms();
+
+       return  availableRooms.stream()
+                .filter(room -> room.getRoomStatus() == RoomStatus.AVAILABLE)
+                .toList();
     }
 }

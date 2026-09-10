@@ -1,11 +1,11 @@
 package ConsoleUI;
 
-import Enums.UserRole;
 import Midllewares.AdminMiddleware;
 import Models.Room;
 import Models.User;
 import Repositories.impl.InMemoryRoomRepo;
 import Services.AuthService;
+import Services.RoomService;
 import Utils.InputsUtil;
 
 import java.util.List;
@@ -24,6 +24,8 @@ public class MainMenu {
 
     private final InMemoryRoomRepo roomRepo;
 
+    private final RoomService roomService;
+
      public MainMenu(User loggedUser){
          this(loggedUser, new AuthService());
      }
@@ -34,6 +36,7 @@ public class MainMenu {
          this.inputsUtil = new InputsUtil();
          this.adminMiddleware = new AdminMiddleware();
          this.roomRepo = new InMemoryRoomRepo();
+         this.roomService = new RoomService();
      }
      
     public  void menu() {
@@ -64,6 +67,16 @@ public class MainMenu {
 
                 case 1:
                     System.out.println("Search Available Rooms coming soon");
+                    List<Room> availableRooms = roomService.getAvailableRooms();
+
+                    if (availableRooms.isEmpty()) {
+                        System.out.println("No rooms found.");
+                        break;
+                    }
+
+                    for (Room room : availableRooms) {
+                        System.out.println(room);
+                    }
                     break;
 
                 case 2:
