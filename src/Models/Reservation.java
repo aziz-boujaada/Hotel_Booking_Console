@@ -2,7 +2,7 @@ package Models;
 
 import Enums.ReservationStatus;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,14 +11,14 @@ public class Reservation {
     private String reservationID ;
     private User client ;
     private Room room ;
-    private Date checkIn ;
-    private Date checkOut ;
-    private int nights ;
-    private BigDecimal total ;
+    private LocalDate checkIn ;
+    private LocalDate checkOut ;
+    private long nights ;
+    private double total ;
     private ReservationStatus status;
 
     public static int counter = 0 ;
-    public Reservation(String reservationID, User client, Room room, Date checkIn, Date checkOut, int nights, BigDecimal total, ReservationStatus status) {
+    public Reservation(String reservationID, User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, ReservationStatus status) {
         this.reservationID = reservationID;
         this.client = client;
         this.room = room;
@@ -60,35 +60,35 @@ public class Reservation {
         this.room = room;
     }
 
-    public Date getCheckIn() {
+    public LocalDate getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Date checkIn) {
+    public void setCheckIn(LocalDate checkIn) {
         this.checkIn = checkIn;
     }
 
-    public Date getCheckOut() {
+    public LocalDate getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Date checkOut) {
+    public void setCheckOut(LocalDate checkOut) {
         this.checkOut = checkOut;
     }
 
-    public int getNights() {
+    public long getNights() {
         return nights;
     }
 
-    public void setNights(int nights) {
+    public void setNights(long nights) {
         this.nights = nights;
     }
 
-    public BigDecimal getTotal() {
+    public double getTotal() {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 
