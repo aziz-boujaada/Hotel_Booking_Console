@@ -6,10 +6,11 @@ import Repositories.RoomRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class InMemoryRoomRepo implements RoomRepository {
 
-    private static final HashMap<String, Room> rooms = new HashMap<>();
+    HashMap<String, Room> rooms = new HashMap<>();
 
     @Override
     public Room addNewRoom(Room room) {
@@ -28,6 +29,16 @@ public class InMemoryRoomRepo implements RoomRepository {
 
         return roomList;
 
+    }
+
+    @Override
+    public Optional<Room> findById(String id){
+        for(Room room : rooms.values()){
+            if(room.generateRoomID().equalsIgnoreCase(id)){
+                return Optional.of(room);
+            }
+        }
+        return Optional.empty();
     }
 
 }
