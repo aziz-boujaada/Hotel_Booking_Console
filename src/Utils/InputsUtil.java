@@ -4,9 +4,11 @@ import ConsoleUI.MainMenu;
 import Enums.RoomStatus;
 import Enums.RoomType;
 import Enums.UserRole;
+import Models.Reservation;
 import Models.Room;
 import Models.User;
 import Services.AuthService;
+import Services.ReservationService;
 import Services.RoomService;
 
 import java.util.Scanner;
@@ -15,11 +17,14 @@ public class InputsUtil {
 
     private final  AuthService authService;
     private final RoomService roomService;
+    private final ReservationService reservationService;
 
     Scanner scanner = new Scanner(System.in);
+
     public InputsUtil(){
         this.authService = new AuthService();
         this.roomService = new RoomService();
+        this.reservationService = new ReservationService();
     }
     // Register form
 
@@ -69,8 +74,6 @@ public class InputsUtil {
         loginForm();
 
     }
-
-
 
     // Login form
     public void loginForm() {
@@ -127,7 +130,7 @@ public class InputsUtil {
 
     public void addRoomForm(){
 
-        Scanner scanner = new Scanner(System.in);
+
 
         System.out.println("======= Add New Room ======");
 
@@ -177,6 +180,27 @@ public class InputsUtil {
         Room room = roomService.addRoom(roomType , nightPrice , capacity , roomStatus );
         System.out.println("Room created Successfully");
         System.out.println(room.toString());
+
+    }
+
+    // add New Reservation form
+
+    public void addReservationForm(){
+        System.out.println("====== Add New Reservation =====");
+
+        System.out.println("Enter Room ID :");
+        String roomID  = scanner.nextLine();
+
+        System.out.println("Enter Check-In Date :");
+        String checkIn  = scanner.nextLine();
+
+        System.out.println("Enter Check-Out Date :");
+        String checkOut  = scanner.nextLine();
+
+        System.out.println("Enter number of nights :");
+        int nights  = scanner.nextInt();
+
+        Reservation reservation = reservationService.addNewReservation(roomID , checkIn , checkOut , nights);
 
     }
 }
