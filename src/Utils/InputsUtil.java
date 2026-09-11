@@ -144,16 +144,12 @@ public class InputsUtil {
         int choiceRoomType =  scanner.nextInt();
 
 
-        switch (choiceRoomType){
-            case 1: roomType = RoomType.SINGLE;
-                break;
-            case 2: roomType = RoomType.DOUBLE;
-                break;
-            case 3: roomType = RoomType.SUITE;
-                break;
-            default:
-                throw new IllegalArgumentException("invalid  room type ");
-        }
+        roomType = switch (choiceRoomType) {
+            case 1 -> RoomType.SINGLE;
+            case 2 -> RoomType.DOUBLE;
+            case 3 -> RoomType.SUITE;
+            default -> throw new IllegalArgumentException("invalid  room type ");
+        };
         System.out.println("Enter capacity of room : ");
         int capacity = scanner.nextInt();
 
@@ -167,14 +163,11 @@ public class InputsUtil {
         int choiceRoomStatus =  scanner.nextInt();
 
 
-        switch (choiceRoomStatus){
-            case 1: roomStatus = RoomStatus.AVAILABLE;
-                break;
-            case 2: roomStatus = RoomStatus.IN_REPAIR;
-                break;
-            default:
-                throw new IllegalArgumentException("invalid  room status ");
-        }
+        roomStatus = switch (choiceRoomStatus) {
+            case 1 -> RoomStatus.AVAILABLE;
+            case 2 -> RoomStatus.IN_REPAIR;
+            default -> throw new IllegalArgumentException("invalid  room status ");
+        };
 
       // call the room service to pass room infos
         Room room = roomService.addRoom(roomType , nightPrice , capacity , roomStatus );
@@ -197,10 +190,11 @@ public class InputsUtil {
         System.out.println("Enter Check-Out Date :");
         String checkOut  = scanner.nextLine();
 
-        System.out.println("Enter number of nights :");
-        int nights  = scanner.nextInt();
+        System.out.println("Enter number of persons :");
+        int personsNumber = scanner.nextInt();
 
-        Reservation reservation = reservationService.addNewReservation(roomID , checkIn , checkOut , nights);
-
+        Reservation reservation = reservationService.addNewReservation(roomID , checkIn , checkOut,personsNumber);
+        System.out.println("Reservation created Successfully");
+        System.out.println(reservation.toString());
     }
 }

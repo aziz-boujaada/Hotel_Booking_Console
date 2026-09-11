@@ -51,7 +51,7 @@ public class AuthService {
         }
 
         user.setLogged(true);
-
+        getLoggedUser(user);
         return user;
 
     }
@@ -91,5 +91,9 @@ public class AuthService {
         user.setPhone(phone);
 
         return userRepo.update(user);
+    }
+
+    public User getLoggedUser(User user){
+        return  user ;
     }
 }

@@ -1,13 +1,17 @@
 package Utils;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 public class DatesUtil {
 
     // parse string to DATE
     public LocalDate parseStringToDate(String stringDate) {
-      return LocalDate.parse(stringDate);
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        return LocalDate.parse(stringDate, formatter);
 
     }
 

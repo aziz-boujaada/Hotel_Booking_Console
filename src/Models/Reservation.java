@@ -16,9 +16,10 @@ public class Reservation {
     private long nights ;
     private double total ;
     private ReservationStatus status;
+    private int personneNumbers;
 
     public static int counter = 0 ;
-    public Reservation(String reservationID, User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, ReservationStatus status) {
+    public Reservation(String reservationID, User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, int personneNumbers, ReservationStatus status) {
         this.reservationID = reservationID;
         this.client = client;
         this.room = room;
@@ -26,6 +27,7 @@ public class Reservation {
         this.checkOut = checkOut;
         this.nights = nights;
         this.total = total;
+        this.personneNumbers = personneNumbers;
         this.status = status;
     }
 
@@ -92,11 +94,33 @@ public class Reservation {
         this.total = total;
     }
 
+    public int getPersonneNumbers() {
+        return personneNumbers;
+    }
+
+    public void setPersonneNumbers(int personneNumbers) {
+        this.personneNumbers = personneNumbers;
+    }
+
     public ReservationStatus getStatus() {
         return status;
     }
 
     public void setStatus(ReservationStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString(){
+        return "Reservation{" +
+                "ID='" + reservationID + '\'' +
+                ", Room ='" + room.toString() + '\'' +
+                ", Chek-In='" + checkIn + '\'' +
+                ", Check-Out='" + checkOut + '\'' +
+                ", Nights='" + nights + '\'' +
+                ", Total='" + total + '\'' +
+                ", Persons='" + personneNumbers + '\'' +
+                ", Status='" + status + '\'' +
+                '}';
     }
 }

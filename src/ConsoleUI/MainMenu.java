@@ -5,6 +5,7 @@ import Models.Room;
 import Models.User;
 import Repositories.impl.InMemoryRoomRepo;
 import Services.AuthService;
+import Services.ReservationService;
 import Services.RoomService;
 import Utils.InputsUtil;
 
@@ -26,6 +27,8 @@ public class MainMenu {
 
     private final RoomService roomService;
 
+    private final ReservationService reservationService;
+
      public MainMenu(User loggedUser){
          this(loggedUser, new AuthService());
      }
@@ -37,6 +40,7 @@ public class MainMenu {
          this.adminMiddleware = new AdminMiddleware();
          this.roomRepo = new InMemoryRoomRepo();
          this.roomService = new RoomService();
+         this.reservationService = new ReservationService();
      }
      
     public  void menu() {
@@ -95,6 +99,7 @@ public class MainMenu {
 
                 case 3:
                     System.out.println("create reservation  coming soon");
+                    inputsUtil.addReservationForm();
                     break;
 
                 case 4:

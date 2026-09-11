@@ -16,7 +16,7 @@ public class Room {
 
     public static int counter = 0 ;
 
-    public Room(String identify, RoomType roomType, double nightPrice, int capacity, RoomStatus roomStatus) {
+    public Room(RoomType roomType, double nightPrice, int capacity, RoomStatus roomStatus) {
         this.identify = generateRoomID();
         this.roomType = roomType;
         this.nightPrice = nightPrice;
@@ -30,6 +30,11 @@ public class Room {
         UUID identify = UUID.randomUUID();
         return "ROOM-" + identify.toString().substring(0 , 4) + "-" + String.format("%04d" , counter++);
     }
+
+    public String getIdentify() {
+        return identify;
+    }
+
     public String getRoomNumber() {
         return identify;
     }

@@ -1,7 +1,11 @@
 package Repositories;
 
+import Models.Reservation;
 import Models.Room;
 
+import java.util.List;
+
 public interface ReservationRepository {
-     Room save(Room room);
+     Reservation save(Reservation reservation);
+     List<Reservation> findByRoomId(String roomId);
 }

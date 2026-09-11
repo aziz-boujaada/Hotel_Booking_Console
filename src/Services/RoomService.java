@@ -25,7 +25,7 @@ public class RoomService {
         moneyUtil.validateEmpty(parsedPrice);
         moneyUtil.validatePrices(parsedPrice);
 
-        Room room = new Room(null , roomType , nightPrice , capacity , roomStatus);
+        Room room = new Room(roomType , nightPrice , capacity , roomStatus);
         return roomRepo.addNewRoom(room);
     }
 

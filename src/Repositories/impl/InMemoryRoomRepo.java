@@ -10,12 +10,12 @@ import java.util.Optional;
 
 public class InMemoryRoomRepo implements RoomRepository {
 
-    HashMap<String, Room> rooms = new HashMap<>();
+    private static final HashMap<String, Room> rooms = new HashMap<>();
 
     @Override
     public Room addNewRoom(Room room) {
 
-        rooms.put(room.generateRoomID() , room);
+        rooms.put(room.getIdentify() , room);
 
         return room;
 
@@ -34,7 +34,7 @@ public class InMemoryRoomRepo implements RoomRepository {
     @Override
     public Optional<Room> findById(String id){
         for(Room room : rooms.values()){
-            if(room.generateRoomID().equalsIgnoreCase(id)){
+            if(room.getIdentify().equalsIgnoreCase(id)){
                 return Optional.of(room);
             }
         }
