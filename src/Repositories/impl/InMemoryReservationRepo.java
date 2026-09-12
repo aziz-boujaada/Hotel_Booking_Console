@@ -19,7 +19,7 @@ public class InMemoryReservationRepo implements ReservationRepository {
 
     public Reservation save(Reservation reservation){
 
-        String ReservationId = reservation.generateReservationID();
+        String ReservationId = reservation.getReservationID();
         reservations.put(ReservationId , reservation);
 
         return  reservation;

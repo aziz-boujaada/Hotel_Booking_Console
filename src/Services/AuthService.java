@@ -11,6 +11,7 @@ import java.util.Optional;
 ///
 public class AuthService {
 
+    private User loggedUser;
 
     private final InputValidation validator;
     private final InMemoryUserRepo userRepo;
@@ -21,13 +22,13 @@ public class AuthService {
     }
 
     // REGISTER
-    public User register(String fullName, String email, String phone, String password , UserRole role) {
+    public User register(String fullName, String email, String phone, String password, UserRole role) {
 
         validator.validateNames(fullName);
         validator.validateEmail(email);
         validator.validatePassword(password);
 
-        User user = new User(null, fullName, email, phone, false, password , role) ;
+        User user = new User(null, fullName, email, phone, false, password, role);
 
         return userRepo.save(user);
     }
@@ -51,7 +52,7 @@ public class AuthService {
         }
 
         user.setLogged(true);
-        getLoggedUser(user);
+        loggedUser = user;
         return user;
 
     }
@@ -64,10 +65,10 @@ public class AuthService {
         }
     }
 
-    public void changePassword(User user , String password){
+    public void changePassword(User user, String password) {
 
         validator.validatePassword(password);
-        userRepo.updatePassword(user , password);
+        userRepo.updatePassword(user, password);
 
     }
 
@@ -93,7 +94,7 @@ public class AuthService {
         return userRepo.update(user);
     }
 
-    public User getLoggedUser(User user){
-        return  user ;
+    public User getLoggedUser() {
+        return loggedUser;
     }
 }
