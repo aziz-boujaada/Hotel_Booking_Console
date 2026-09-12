@@ -1,42 +1,55 @@
 package ConsoleUI;
 
+import Services.AuthService;
 import Utils.InputsUtil;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class RoomManagmentMenu {
 
     private final InputsUtil inputsUtil;
-    public RoomManagmentMenu(){
-        this.inputsUtil = new InputsUtil();
+    private final Scanner scanner;
+
+    public RoomManagmentMenu(AuthService authService) {
+        this.inputsUtil = new InputsUtil(authService);
+        this.scanner = new Scanner(System.in);
     }
-    Scanner scanner = new Scanner(System.in);
-    public void roomMenu(){
 
-        int userChoice ;
+    public void roomMenu() {
+        int userChoice;
 
-        do{
-        System.out.println("========== Rooms Management ===========");
-        System.out.println("1- Add new room ");
-        System.out.println("2- Delete room ");
-        System.out.println("3- Show room ");
-        System.out.println("0- Exit ");
+        do {
+            try {
+                System.out.println("========== Rooms Management ===========");
+                System.out.println("1- Add new room ");
+                System.out.println("2- Delete room ");
+                System.out.println("3- Show room ");
+                System.out.println("0- Exit ");
+                System.out.print("Enter your choice : ");
 
-        System.out.println("Enter your choice :  ");
-         userChoice = scanner.nextInt();
+                userChoice = scanner.nextInt();
 
-        switch (userChoice){
-            case 1: inputsUtil.addRoomForm();
-                break;
-            case 2: // delete room method
-                break;
-            case 3: // show  room
-                break;
-            case 0:
-                break;
-            default: System.out.println("Invalid choice");
-        }
-
-        }while (userChoice != 0);
+                switch (userChoice) {
+                    case 1:
+                        inputsUtil.addRoomForm();
+                        break;
+                    case 2:
+                        System.out.println("Delete room method not implemented yet.");
+                        break;
+                    case 3:
+                        System.out.println("Show room method not implemented yet.");
+                        break;
+                    case 0:
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                scanner.nextLine();
+                userChoice = -1;
+            }
+        } while (userChoice != 0);
     }
 }

@@ -1,13 +1,17 @@
 import ConsoleUI.AuthMenu;
 import ConsoleUI.MainMenu;
 import Models.User;
+import Services.AuthService;
 
 
 void main() {
 
     // get the auth menu
-   AuthMenu menu = new AuthMenu() ;
-   menu.showMenu() ;
+
+   AuthService authService = new AuthService();
+
+   AuthMenu menu = new AuthMenu(authService);
+   menu.showMenu();
 
 
 

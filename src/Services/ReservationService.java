@@ -19,11 +19,11 @@ public class ReservationService {
     private final DatesUtil datesUtil;
     private final AuthService authService;
 
-    public ReservationService(){
+    public ReservationService(AuthService authService){
          this.roomRepository = new InMemoryRoomRepo();
          this.datesUtil = new DatesUtil();
          this.reservationRepo = new InMemoryReservationRepo();
-         this.authService = new AuthService();
+         this.authService = authService;
     }
     public Reservation addNewReservation(String roomID , String checkIn , String checkOut ,int personsNumber ){
 
@@ -49,10 +49,11 @@ public class ReservationService {
           double total = room.getNightPrice() * (int) nights;
 
           // get logged user
-          User user = authService.getLoggedUser(null);
+          User user = authService.getLoggedUser();
+         System.out.println("Logged user: " + user);
 
 
-          return new Reservation(null , user, room ,parsedCheckIn , parsedCheckOut , nights ,total, personsNumber, ReservationStatus.CONFIRMED);
+          return new Reservation(user, room ,parsedCheckIn , parsedCheckOut , nights ,total, personsNumber, ReservationStatus.CONFIRMED);
 
     }
 

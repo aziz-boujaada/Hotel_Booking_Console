@@ -19,8 +19,8 @@ public class Reservation {
     private int personneNumbers;
 
     public static int counter = 0 ;
-    public Reservation(String reservationID, User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, int personneNumbers, ReservationStatus status) {
-        this.reservationID = reservationID;
+    public Reservation( User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, int personneNumbers, ReservationStatus status) {
+        this.reservationID = generateReservationID();
         this.client = client;
         this.room = room;
         this.checkIn = checkIn;
@@ -36,6 +36,10 @@ public class Reservation {
     public String generateReservationID(){
         UUID identify = UUID.randomUUID();
         return "RES-" + identify.toString().substring(0 , 4) + "-" + String.format("%04d" , counter++);
+    }
+
+    public String getReservationID() {
+        return reservationID;
     }
 
     public String getReservationNumber() {
@@ -115,6 +119,7 @@ public class Reservation {
         return "Reservation{" +
                 "ID='" + reservationID + '\'' +
                 ", Room ='" + room.toString() + '\'' +
+                ", User ='" + client.toString() + '\'' +
                 ", Chek-In='" + checkIn + '\'' +
                 ", Check-Out='" + checkOut + '\'' +
                 ", Nights='" + nights + '\'' +
