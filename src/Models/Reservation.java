@@ -1,5 +1,6 @@
 package Models;
 
+import DTOs.UserDto;
 import Enums.ReservationStatus;
 
 import java.time.LocalDate;
@@ -8,18 +9,19 @@ import java.util.UUID;
 
 public class Reservation {
 
-    private String reservationID ;
-    private User client ;
-    private Room room ;
-    private LocalDate checkIn ;
-    private LocalDate checkOut ;
-    private long nights ;
-    private double total ;
+    private String reservationID;
+    private User client;
+    private Room room;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
+    private long nights;
+    private double total;
     private ReservationStatus status;
     private int personneNumbers;
 
-    public static int counter = 0 ;
-    public Reservation( User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, int personneNumbers, ReservationStatus status) {
+    public static int counter = 0;
+
+    public Reservation(User client, Room room, LocalDate checkIn, LocalDate checkOut, long nights, double total, int personneNumbers, ReservationStatus status) {
         this.reservationID = generateReservationID();
         this.client = client;
         this.room = room;
@@ -33,9 +35,9 @@ public class Reservation {
 
 
     // generate unique identify to room
-    public String generateReservationID(){
+    public String generateReservationID() {
         UUID identify = UUID.randomUUID();
-        return "RES-" + identify.toString().substring(0 , 4) + "-" + String.format("%04d" , counter++);
+        return "RES-" + identify.toString().substring(0, 4) + "-" + String.format("%04d", counter++);
     }
 
     public String getReservationID() {
@@ -115,17 +117,56 @@ public class Reservation {
     }
 
     @Override
-    public String toString(){
-        return "Reservation{" +
-                "ID='" + reservationID + '\'' +
-                ", Room ='" + room.toString() + '\'' +
-                ", User ='" + client.toString() + '\'' +
-                ", Chek-In='" + checkIn + '\'' +
-                ", Check-Out='" + checkOut + '\'' +
-                ", Nights='" + nights + '\'' +
-                ", Total='" + total + '\'' +
-                ", Persons='" + personneNumbers + '\'' +
-                ", Status='" + status + '\'' +
-                '}';
+    public String toString() {
+
+        UserDto userDto = UserDto.fromModel(client);
+
+        return String.format(
+                """
+                        ================= Reservation =================
+                        Reservation ID : %s
+                        
+                        Client
+                          Name         : %s
+                          Email        : %s
+                          Phone        : %s
+                        
+                        Room
+                          Room ID      : %s
+                          Type         : %s
+                          Price        : %.2f MAD / night
+                          Capacity     : %d
+                          Status       : %s
+                        
+                        Stay
+                          Check-In     : %s
+                          Check-Out    : %s
+                          Nights       : %d
+                          Persons      : %d
+                        
+                        Total          : %.2f MAD
+                        Status         : %s
+                        =================================================
+                        """,
+                reservationID,
+
+                userDto.fullName,
+                userDto.email,
+                userDto.phone,
+
+                room.getIdentify(),
+                room.getRoomType(),
+                room.getNightPrice(),
+                room.getCapacity(),
+                room.getRoomStatus(),
+
+                checkIn,
+                checkOut,
+                nights,
+                personneNumbers,
+
+                total,
+                status
+        );
     }
 }
