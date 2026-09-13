@@ -139,11 +139,11 @@ public class MainMenu {
                         break;
 
                     case 6:
-                        System.out.println("Update reservation coming soon");
+                        inputsUtil.updateReservationForm(loggedUser);
                         break;
 
                     case 7:
-                        System.out.println("Cancel reservation coming soon");
+                        inputsUtil.cancelReservationForm(loggedUser);
                         break;
 
                     case 8:

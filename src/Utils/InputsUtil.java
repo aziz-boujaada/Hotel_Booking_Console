@@ -12,6 +12,7 @@ import Services.ReservationService;
 import Services.RoomService;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class InputsUtil {
@@ -253,6 +254,87 @@ public class InputsUtil {
                 return;
             } catch (IllegalArgumentException e) {
                 System.out.println("Reservation failed: " + e.getMessage());
+                System.out.println("Please try again.\n");
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
+                System.out.println("Please try again.\n");
+            }
+        }
+    }
+
+    public void updateReservationForm(User loggedUser) {
+        while (true) {
+            try {
+                System.out.println("====== Update Reservation =====");
+                List<Reservation> reservations = reservationService.getMyReservations(loggedUser);
+
+                if (reservations.isEmpty()) {
+                    System.out.println("You have no reservations to update.");
+                    return;
+                }
+
+                for (int i = 0; i < reservations.size(); i++) {
+                    System.out.println((i + 1) + "- " + reservations.get(i));
+                }
+
+                int choice = readPositiveInt("Select the reservation number to update: ");
+                if (choice < 1 || choice > reservations.size()) {
+                    throw new IllegalArgumentException("Invalid reservation selection.");
+                }
+
+                Reservation selected = reservations.get(choice - 1);
+                String checkIn = readRequiredLine("Enter new Check-In Date: ");
+                String checkOut = readRequiredLine("Enter new Check-Out Date: ");
+                int personsNumber = readPositiveInt("Enter new number of persons: ");
+
+                Reservation updated = reservationService.updateReservation(
+                        selected.getReservationID(),
+                        checkIn,
+                        checkOut,
+                        personsNumber
+                );
+
+                System.out.println("Reservation updated successfully.");
+                System.out.println(updated);
+                return;
+            } catch (IllegalArgumentException e) {
+                System.out.println("Update failed: " + e.getMessage());
+                System.out.println("Please try again.\n");
+            } catch (Exception e) {
+                System.out.println("Unexpected error: " + e.getMessage());
+                System.out.println("Please try again.\n");
+            }
+        }
+    }
+
+    public void cancelReservationForm(User loggedUser) {
+        while (true) {
+            try {
+                System.out.println("====== Cancel Reservation =====");
+                List<Reservation> reservations = reservationService.getMyReservations(loggedUser);
+
+                if (reservations.isEmpty()) {
+                    System.out.println("You have no reservations to cancel.");
+                    return;
+                }
+
+                for (int i = 0; i < reservations.size(); i++) {
+                    System.out.println((i + 1) + "- " + reservations.get(i));
+                }
+
+                int choice = readPositiveInt("Select the reservation number to cancel: ");
+                if (choice < 1 || choice > reservations.size()) {
+                    throw new IllegalArgumentException("Invalid reservation selection.");
+                }
+
+                Reservation selected = reservations.get(choice - 1);
+                boolean cancelled = reservationService.cancelReservation(selected.getReservationID());
+                if (cancelled) {
+                    System.out.println("Reservation cancelled successfully.");
+                    return;
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println("Cancellation failed: " + e.getMessage());
                 System.out.println("Please try again.\n");
             } catch (Exception e) {
                 System.out.println("Unexpected error: " + e.getMessage());
