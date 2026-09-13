@@ -21,10 +21,11 @@ public class InputsUtil {
     private final ReservationService reservationService;
     private final Scanner scanner;
 
-    public InputsUtil(AuthService authService) {
+    public InputsUtil(AuthService authService ,ReservationService reservationService,RoomService roomService ) {
         this.authService = authService;
-        this.roomService = new RoomService();
-        this.reservationService = new ReservationService(authService);
+        this.roomService = roomService;
+        this.reservationService = reservationService;
+
         this.scanner = new Scanner(System.in);
     }
 
@@ -124,7 +125,7 @@ public class InputsUtil {
         }
     }
 
-    public void loginForm() {
+    public User loginForm() {
         while (true) {
             try {
                 System.out.println("======= Login ======");
@@ -135,10 +136,8 @@ public class InputsUtil {
                 User user = authService.login(email, password);
                 System.out.println("\n===== Login successfully =====");
                 System.out.println(user.toString());
+                return user;
 
-                MainMenu mainMenu = new MainMenu(user, authService);
-                mainMenu.menu();
-                return;
             } catch (IllegalArgumentException e) {
                 System.out.println("Login failed: " + e.getMessage());
                 System.out.println("Please try again.\n");

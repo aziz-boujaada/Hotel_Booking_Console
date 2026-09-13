@@ -1,6 +1,7 @@
 package Repositories.impl;
 
 import Models.Reservation;
+import Models.User;
 import Repositories.ReservationRepository;
 import Services.AuthService;
 
@@ -29,6 +30,19 @@ public class InMemoryReservationRepo implements ReservationRepository {
          return reservations.values().stream()
                  .filter(reservation -> reservation.getRoom().getIdentify().equals(roomId))
                  .toList();
+    }
+
+    public List<Reservation> myReservations(User loggedUser){
+        List<Reservation> myReservatiinsList = new ArrayList<>();
+
+
+
+        for(Reservation reservation : reservations.values()){
+            if(reservation.getClient().getId().equals(loggedUser.getId())){
+                myReservatiinsList.add(reservation);
+            }
+        }
+        return myReservatiinsList;
     }
 
 }

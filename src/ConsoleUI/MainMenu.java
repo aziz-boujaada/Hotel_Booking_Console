@@ -1,8 +1,11 @@
 package ConsoleUI;
 
 import Midllewares.AdminMiddleware;
+import Models.Reservation;
 import Models.Room;
 import Models.User;
+import Repositories.ReservationRepository;
+import Repositories.impl.InMemoryReservationRepo;
 import Repositories.impl.InMemoryRoomRepo;
 import Services.AuthService;
 import Services.ReservationService;
@@ -22,20 +25,32 @@ public class MainMenu {
     private final InMemoryRoomRepo roomRepo;
     private final RoomService roomService;
     private final ReservationService reservationService;
+    private final InMemoryReservationRepo reservationRepository;
+    private final RoomManagmentMenu roomManagmentMenu;
     private final Scanner scanner;
 
-    public MainMenu(User loggedUser) {
-        this(loggedUser, new AuthService());
-    }
 
-    public MainMenu(User loggedUser, AuthService authService) {
+    public MainMenu(
+                    User loggedUser,
+                    AuthService authService ,
+                    InMemoryRoomRepo inMemoryRoomRepo ,
+                    RoomService roomService,
+                    InMemoryReservationRepo reservationRepo,
+                    ReservationService reservationService,
+                    InputsUtil inputsUtil,
+                    RoomManagmentMenu roomManagmentMenu
+
+    ) {
         this.authService = authService;
         this.loggedUser = loggedUser;
-        this.inputsUtil = new InputsUtil(authService);
         this.adminMiddleware = new AdminMiddleware();
-        this.roomRepo = new InMemoryRoomRepo();
-        this.roomService = new RoomService();
-        this.reservationService = new ReservationService(authService);
+        this.roomRepo = inMemoryRoomRepo;
+        this.roomService = roomService;
+        this.reservationRepository = reservationRepo;
+        this.reservationService = reservationService;
+        this.inputsUtil = inputsUtil;
+        this.roomManagmentMenu = roomManagmentMenu;
+
         this.scanner = new Scanner(System.in);
     }
 
@@ -51,7 +66,7 @@ public class MainMenu {
         }
     }
 
-    public void menu() {
+    public boolean menu() {
         int userChoice;
 
         do {
@@ -108,7 +123,16 @@ public class MainMenu {
 
                     case 4:
                         System.out.println("My reservations coming soon");
-                        break;
+
+                        List<Reservation> myReservations = reservationRepository.myReservations(loggedUser);
+                        if(myReservations.isEmpty()){
+                            System.out.println("No reservations ");
+                            break;
+                        }
+                        for(Reservation reservation : myReservations){
+                            System.out.println(reservation.toString());
+                        }
+                            break;
 
                     case 5:
                         System.out.println("Reservation details coming soon");
@@ -132,7 +156,6 @@ public class MainMenu {
 
                     case 10:
                         if (adminMiddleware.isAdmin(loggedUser)) {
-                            RoomManagmentMenu roomManagmentMenu = new RoomManagmentMenu(authService);
                             roomManagmentMenu.roomMenu();
                         } else {
                             System.out.println("Access denied. Admin only.");
@@ -142,7 +165,7 @@ public class MainMenu {
                     case 11:
                         authService.logout(loggedUser);
                         System.out.println("Goodbye!");
-                        return;
+                        return true;
 
                     default:
                         System.out.println("Invalid choice. Please choose between 1 and 11.");
@@ -152,5 +175,7 @@ public class MainMenu {
             }
 
         } while (userChoice != 11);
+
+        return false;
     }
 }
