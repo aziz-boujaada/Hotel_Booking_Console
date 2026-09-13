@@ -1,6 +1,11 @@
 package ConsoleUI;
 
+import Models.User;
+import Repositories.impl.InMemoryReservationRepo;
+import Repositories.impl.InMemoryRoomRepo;
 import Services.AuthService;
+import Services.ReservationService;
+import Services.RoomService;
 import Utils.InputsUtil;
 
 import java.util.InputMismatchException;
@@ -10,14 +15,35 @@ import java.util.Scanner;
 public class AuthMenu {
 
     private final AuthService authService;
+    private final InputsUtil inputsUtil;
+    private final InMemoryRoomRepo roomRepo;
+    private final RoomService roomService;
+    private final InMemoryReservationRepo reservationRepo;
+    private final ReservationService reservationService;
+    private final RoomManagmentMenu roomManagmentMenu;
 
-    public AuthMenu(AuthService authService) {
+
+    public AuthMenu(
+            AuthService authService,
+            InputsUtil inputsUtil,
+            InMemoryRoomRepo roomRepo,
+            RoomService roomService,
+            InMemoryReservationRepo reservationRepo,
+            ReservationService reservationService,
+            RoomManagmentMenu roomManagmentMenu
+    ) {
         this.authService = authService;
+        this.inputsUtil = inputsUtil;
+        this.roomRepo = roomRepo;
+        this.roomService = roomService;
+        this.reservationRepo = reservationRepo;
+        this.reservationService = reservationService;
+        this.roomManagmentMenu = roomManagmentMenu;
+
     }
 
     public void showMenu() {
         Scanner scanner = new Scanner(System.in);
-        InputsUtil inputs = new InputsUtil(authService);
 
         while (true) {
             try {
@@ -30,10 +56,30 @@ public class AuthMenu {
 
                 switch (userChoice) {
                     case 1:
-                        inputs.loginForm();
-                        break;
+                        User loggedUser = inputsUtil.loginForm();
+                        if (loggedUser == null) {
+                            break;
+                        }
+
+                        MainMenu mainMenu = new MainMenu(
+                                loggedUser,
+                                authService,
+                                roomRepo,
+                                roomService,
+                                reservationRepo,
+                                reservationService,
+                                inputsUtil,
+                                roomManagmentMenu
+                        );
+
+                        boolean loggedOut = mainMenu.menu();
+                        if (loggedOut) {
+                            System.out.println("Returning to auth menu...");
+                            continue;
+                        }
+                        return;
                     case 2:
-                        inputs.registerForm();
+                        inputsUtil.registerForm();
                         break;
                     default:
                         System.out.println("Invalid Choice. Please choose 1 or 2.");

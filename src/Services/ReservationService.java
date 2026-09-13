@@ -19,10 +19,15 @@ public class ReservationService {
     private final DatesUtil datesUtil;
     private final AuthService authService;
 
-    public ReservationService(AuthService authService){
-         this.roomRepository = new InMemoryRoomRepo();
-         this.datesUtil = new DatesUtil();
-         this.reservationRepo = new InMemoryReservationRepo();
+    public ReservationService(
+            AuthService authService ,
+            InMemoryReservationRepo reservationRepo ,
+            InMemoryRoomRepo roomRepo,
+            DatesUtil datesUtil
+    ){
+         this.roomRepository = roomRepo;
+         this.datesUtil = datesUtil;
+         this.reservationRepo = reservationRepo ;
          this.authService = authService;
     }
     public Reservation addNewReservation(String roomID , String checkIn , String checkOut ,int personsNumber ){
@@ -50,10 +55,24 @@ public class ReservationService {
 
           // get logged user
           User user = authService.getLoggedUser();
-         System.out.println("Logged user: " + user);
+          if (user == null) {
+              throw new IllegalArgumentException("No user is logged in.");
+          }
+          System.out.println("Logged user: " + user);
 
+          Reservation reservation = new Reservation(
+                  user,
+                  room,
+                  parsedCheckIn,
+                  parsedCheckOut,
+                  nights,
+                  total,
+                  personsNumber,
+                  ReservationStatus.CONFIRMED
+          );
 
-          return new Reservation(user, room ,parsedCheckIn , parsedCheckOut , nights ,total, personsNumber, ReservationStatus.CONFIRMED);
+          reservationRepo.save(reservation);
+          return reservation;
 
     }
 

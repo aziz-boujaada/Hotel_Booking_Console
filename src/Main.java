@@ -1,18 +1,51 @@
 import ConsoleUI.AuthMenu;
-import ConsoleUI.MainMenu;
-import Models.User;
+import ConsoleUI.RoomManagmentMenu;
+import Repositories.impl.InMemoryReservationRepo;
+import Repositories.impl.InMemoryRoomRepo;
 import Services.AuthService;
+import Services.ReservationService;
+import Services.RoomService;
+import Utils.DatesUtil;
+import Utils.InputsUtil;
 
+public class Main {
+    public static void main(String[] args) {
+        AuthService authService = new AuthService();
 
-void main() {
+        InMemoryRoomRepo roomRepo = new InMemoryRoomRepo();
+        InMemoryReservationRepo reservationRepo = new InMemoryReservationRepo();
 
-    // get the auth menu
+        DatesUtil datesUtil = new DatesUtil();
+        RoomService roomService = new RoomService();
 
-   AuthService authService = new AuthService();
+        ReservationService reservationService = new ReservationService(
+                authService,
+                reservationRepo,
+                roomRepo,
+                datesUtil
+        );
 
-   AuthMenu menu = new AuthMenu(authService);
-   menu.showMenu();
+        InputsUtil inputsUtil = new InputsUtil(
+                authService,
+                reservationService,
+                roomService
+        );
 
+        RoomManagmentMenu roomManagmentMenu = new RoomManagmentMenu(
+                authService,
+                inputsUtil
+        );
 
+        AuthMenu authMenu = new AuthMenu(
+                authService,
+                inputsUtil,
+                roomRepo,
+                roomService,
+                reservationRepo,
+                reservationService,
+                roomManagmentMenu
+        );
 
+        authMenu.showMenu();
+    }
 }

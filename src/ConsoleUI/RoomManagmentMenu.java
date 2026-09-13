@@ -11,8 +11,8 @@ public class RoomManagmentMenu {
     private final InputsUtil inputsUtil;
     private final Scanner scanner;
 
-    public RoomManagmentMenu(AuthService authService) {
-        this.inputsUtil = new InputsUtil(authService);
+    public RoomManagmentMenu(AuthService authService , InputsUtil inputsUtil) {
+        this.inputsUtil = inputsUtil;
         this.scanner = new Scanner(System.in);
     }
 
