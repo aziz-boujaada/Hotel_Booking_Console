@@ -4,6 +4,7 @@ import ConsoleUI.MainMenu;
 import Enums.RoomStatus;
 import Enums.RoomType;
 import Enums.UserRole;
+import Helpers.InputsReader;
 import Models.Reservation;
 import Models.Room;
 import Models.User;
@@ -20,90 +21,34 @@ public class InputsUtil {
     private final AuthService authService;
     private final RoomService roomService;
     private final ReservationService reservationService;
+    private final InputsReader inputsReader;
     private final Scanner scanner;
 
-    public InputsUtil(AuthService authService ,ReservationService reservationService,RoomService roomService ) {
+    public InputsUtil(AuthService authService, ReservationService reservationService, RoomService roomService) {
         this.authService = authService;
         this.roomService = roomService;
         this.reservationService = reservationService;
+        this.inputsReader = new InputsReader();
 
         this.scanner = new Scanner(System.in);
     }
 
-    private String readRequiredLine(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String value = scanner.nextLine();
-            if (value != null && !value.trim().isEmpty()) {
-                return value.trim();
-            }
-            System.out.println("This field is required.");
-        }
-    }
-
-    private int readIntWithRange(String prompt, int min, int max) {
-        while (true) {
-            System.out.print(prompt);
-            String value = scanner.nextLine();
-            try {
-                int choice = Integer.parseInt(value.trim());
-                if (choice < min || choice > max) {
-                    throw new IllegalArgumentException("Choice must be between " + min + " and " + max + ".");
-                }
-                return choice;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number. Please try again.");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-    private double readDouble(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String value = scanner.nextLine();
-            try {
-                return Double.parseDouble(value.trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number. Please try again.");
-            }
-        }
-    }
-
-    private int readPositiveInt(String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String value = scanner.nextLine();
-            try {
-                int parsed = Integer.parseInt(value.trim());
-                if (parsed <= 0) {
-                    throw new IllegalArgumentException("Value must be greater than zero.");
-                }
-                return parsed;
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid number. Please try again.");
-            } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
 
     public void registerForm() {
         while (true) {
             try {
                 System.out.println("======= Register ======");
 
-                String fullname = readRequiredLine("Enter Your full name: ");
-                String email = readRequiredLine("Enter Your email: ");
-                String phone = readRequiredLine("Enter Your phone: ");
-                String password = readRequiredLine("Enter Your password: ");
+                String fullname = inputsReader.readRequiredLine("Enter Your full name: ");
+                String email = inputsReader.readRequiredLine("Enter Your email: ");
+                String phone = inputsReader.readRequiredLine("Enter Your phone: ");
+                String password = inputsReader.readRequiredLine("Enter Your password: ");
 
                 UserRole role;
                 System.out.println("---- choice Role ----");
                 System.out.println("1- ADMIN");
                 System.out.println("2- CLIENT");
-                int choiceRole = readIntWithRange("Select role: ", 1, 2);
+                int choiceRole = inputsReader.readIntWithRange("Select role: ", 1, 2);
 
                 switch (choiceRole) {
                     case 1 -> role = UserRole.ADMIN;
@@ -114,7 +59,7 @@ public class InputsUtil {
                 User user = authService.register(fullname, email, phone, password, role);
                 System.out.println("\n===== User Registered =====");
                 System.out.println(user.toString());
-                loginForm();
+
                 return;
             } catch (IllegalArgumentException e) {
                 System.out.println("Validation error: " + e.getMessage());
@@ -131,8 +76,8 @@ public class InputsUtil {
             try {
                 System.out.println("======= Login ======");
 
-                String email = readRequiredLine("Enter Your email: ");
-                String password = readRequiredLine("Enter Your password: ");
+                String email = inputsReader.readRequiredLine("Enter Your email: ");
+                String password = inputsReader.readRequiredLine("Enter Your password: ");
 
                 User user = authService.login(email, password);
                 System.out.println("\n===== Login successfully =====");
@@ -171,9 +116,9 @@ public class InputsUtil {
         while (true) {
             try {
                 System.out.println("======= Update Profile ======");
-                String fullName = readRequiredLine("Enter your full name: ");
-                String email = readRequiredLine("Enter your email: ");
-                String phone = readRequiredLine("Enter your phone: ");
+                String fullName = inputsReader.readRequiredLine("Enter your full name: ");
+                String email = inputsReader.readRequiredLine("Enter your email: ");
+                String phone = inputsReader.readRequiredLine("Enter your phone: ");
 
                 User updatedUser = authService.updateProfile(loggedUser, fullName, email, phone);
                 System.out.println("Profile updated successfully");
@@ -201,7 +146,7 @@ public class InputsUtil {
                 System.out.println("1- Single");
                 System.out.println("2- Double");
                 System.out.println("3- Suite");
-                int choiceRoomType = readIntWithRange("Select room type: ", 1, 3);
+                int choiceRoomType = inputsReader.readIntWithRange("Select room type: ", 1, 3);
 
                 switch (choiceRoomType) {
                     case 1 -> roomType = RoomType.SINGLE;
@@ -210,13 +155,13 @@ public class InputsUtil {
                     default -> throw new IllegalArgumentException("invalid room type");
                 }
 
-                int capacity = readPositiveInt("Enter capacity of room: ");
-                double nightPrice = readDouble("Enter night price: ");
+                int capacity = inputsReader.readPositiveInt("Enter capacity of room: ");
+                double nightPrice = inputsReader.readDouble("Enter night price: ");
 
                 System.out.println("---- choice Room Status  ----");
                 System.out.println("1- Available");
                 System.out.println("2- In Repair");
-                int choiceRoomStatus = readIntWithRange("Select room status: ", 1, 2);
+                int choiceRoomStatus = inputsReader.readIntWithRange("Select room status: ", 1, 2);
 
                 switch (choiceRoomStatus) {
                     case 1 -> roomStatus = RoomStatus.AVAILABLE;
@@ -239,27 +184,27 @@ public class InputsUtil {
     }
 
     public void addReservationForm() {
-        while (true) {
-            try {
-                System.out.println("====== Add New Reservation =====");
 
-                String roomID = readRequiredLine("Enter Room ID: ");
-                String checkIn = readRequiredLine("Enter Check-In Date: ");
-                String checkOut = readRequiredLine("Enter Check-Out Date: ");
-                int personsNumber = readPositiveInt("Enter number of persons: ");
+        try {
+            System.out.println("====== Add New Reservation =====");
 
-                Reservation reservation = reservationService.addNewReservation(roomID, checkIn, checkOut, personsNumber);
-                System.out.println("Reservation created Successfully");
-                System.out.println(reservation.toString());
-                return;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Reservation failed: " + e.getMessage());
-                System.out.println("Please try again.\n");
-            } catch (Exception e) {
-                System.out.println("Unexpected error: " + e.getMessage());
-                System.out.println("Please try again.\n");
-            }
+            String roomID = inputsReader.readRequiredLine("Enter Room ID: ");
+            String checkIn = inputsReader.readRequiredLine("Enter Check-In Date: ");
+            String checkOut = inputsReader.readRequiredLine("Enter Check-Out Date: ");
+            int personsNumber = inputsReader.readPositiveInt("Enter number of persons: ");
+
+            Reservation reservation = reservationService.addNewReservation(roomID, checkIn, checkOut, personsNumber);
+            System.out.println("Reservation created Successfully");
+            System.out.println(reservation.toString());
+            return;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Reservation failed: " + e.getMessage());
+            System.out.println("Please try again.\n");
+        } catch (Exception e) {
+            System.out.println("Unexpected error: " + e.getMessage());
+            System.out.println("Please try again.\n");
         }
+
     }
 
     public void updateReservationForm(User loggedUser) {
@@ -277,15 +222,15 @@ public class InputsUtil {
                     System.out.println((i + 1) + "- " + reservations.get(i));
                 }
 
-                int choice = readPositiveInt("Select the reservation number to update: ");
+                int choice = inputsReader.readPositiveInt("Select the reservation number to update: ");
                 if (choice < 1 || choice > reservations.size()) {
                     throw new IllegalArgumentException("Invalid reservation selection.");
                 }
 
                 Reservation selected = reservations.get(choice - 1);
-                String checkIn = readRequiredLine("Enter new Check-In Date: ");
-                String checkOut = readRequiredLine("Enter new Check-Out Date: ");
-                int personsNumber = readPositiveInt("Enter new number of persons: ");
+                String checkIn = inputsReader.readRequiredLine("Enter new Check-In Date: ");
+                String checkOut = inputsReader.readRequiredLine("Enter new Check-Out Date: ");
+                int personsNumber = inputsReader.readPositiveInt("Enter new number of persons: ");
 
                 Reservation updated = reservationService.updateReservation(
                         selected.getReservationID(),
@@ -322,7 +267,7 @@ public class InputsUtil {
                     System.out.println((i + 1) + "- " + reservations.get(i));
                 }
 
-                int choice = readPositiveInt("Select the reservation number to cancel: ");
+                int choice = inputsReader.readPositiveInt("Select the reservation number to cancel: ");
                 if (choice < 1 || choice > reservations.size()) {
                     throw new IllegalArgumentException("Invalid reservation selection.");
                 }
