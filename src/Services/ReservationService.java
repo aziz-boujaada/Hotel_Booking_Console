@@ -1,6 +1,7 @@
 package Services;
 
 import Enums.ReservationStatus;
+import Enums.RoomStatus;
 import Models.Reservation;
 import Models.Room;
 import Models.User;
@@ -50,6 +51,10 @@ public class ReservationService {
 
         if (personsNumber > room.getCapacity()) {
             throw new IllegalArgumentException("Number of persons must be smaller than or equal to room capacity.");
+        }
+
+        if(room.getRoomStatus().equals(RoomStatus.IN_REPAIR)){
+            throw new IllegalArgumentException("this room in repair chose other room or wait until room available ");
         }
 
         double total = room.getNightPrice() * (int) nights;
